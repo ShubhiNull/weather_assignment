@@ -1,0 +1,24 @@
+import json
+with open("precipitation.json", 'r', encoding = 'utf-8') as file: 
+    precipitation = json.load(file)
+monthly_prec = {}
+months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+for month in months:
+    monthly_prec [month] = 0
+
+for month in months: 
+    total_monthly_precipitation = 0
+    for labs in precipitation: 
+        if (labs ['station'] == 'GHCND:US1WAKG0038'): 
+            if (f"2010-{month}-01" <= labs['date'] <= f"2010-{month}-31"):
+                prep = int(labs['value'])
+                total_monthly_precipitation += prep
+        monthly_prec[month] = total_monthly_precipitation 
+
+monthly_precipitation = []
+for month in months:
+    monthly_precipitation.append(monthly_prec[month])
+
+with open('results.json', 'w', encoding='utf-8') as file:
+    json.dump(monthly_precipitation, file)
+

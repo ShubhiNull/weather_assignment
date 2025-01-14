@@ -1,6 +1,8 @@
 import json
+import csv
 with open("precipitation.json", 'r', encoding = 'utf-8') as file: 
     precipitation = json.load(file)
+
 monthly_prec = {}
 months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
 for month in months:
@@ -22,3 +24,24 @@ for month in months:
 with open('results.json', 'w', encoding='utf-8') as file:
     json.dump(monthly_precipitation, file)
 
+total_preci = 0
+for labs in precipitation: 
+    if (labs ['station'] == 'GHCND:US1WAKG0038'): 
+        prep = int(labs['value'])
+        total_preci +=prep
+
+total_precipitation = [total_preci]
+
+relative_monthly = {}
+for month in months: 
+    relative_pre = (monthly_prec[month])/total_preci
+    relative_monthly[month] = relative_pre 
+
+results = {}
+results = {
+    "total_precipitation": total_precipitation,
+    "relative monthly precipitation": relative_monthly,
+    "monthly_precipitation": monthly_precipitation
+}
+with open('results.json', 'w', encoding='utf-8') as file:
+    json.dump(results, file, indent=4)
